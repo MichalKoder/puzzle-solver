@@ -1,0 +1,148 @@
+body {
+    background-color: lightblue;
+    
+}
+
+div.picture {
+    background-image: url('img/bg.jpg');
+    background-size: cover;
+    padding-bottom: 5%;
+    
+   
+}
+
+header {
+    padding-top: 20px;
+    height: 120px;
+    background-color: gray;
+    text-align: center;
+}
+
+article {
+    position: relative;
+    margin-top: 5%;
+    width: 50%;
+    padding-top: 50%;
+    
+    margin-left: auto;
+    margin-right: auto;
+    /* border: 1px solid black; */
+
+}
+
+.board {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 10px solid orangered;
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    background-color: rgb(255, 165, 0);
+    /* cursor: pointer; */
+   
+}
+
+#n0 {
+    border-radius: 5px;
+}
+
+.overlay {
+    /* width: 632px; */
+    /* height: 532px; */
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    /* margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto; */
+    border: 0px;
+    border-radius: 0px;
+    position: absolute;
+    background-color: rgba(0,0,0,0.3);
+    opacity: 70%;
+    display: none;
+  
+    display: none;
+}
+
+.overtext {
+    /* width: 100%; */
+    /* width: 200px; */
+    /* height: 200px; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: auto auto auto auto;
+    text-align: center;
+    display: none;
+    color: white;
+    
+}
+.overtext button#button1 {
+    /* margin-right: 50px; */
+    background-color: limegreen;
+    /* width: 60px; */
+    /* height: 50px; */
+}
+.overtext button#button2 {
+    background-color: salmon;
+    /* width: 60px; */
+    /* height: 50px; */
+}
+
+#score {
+  font-size: 120%;
+  font-weight: bold;
+}
+
+div.square {
+    border: 2px solid orange;
+    border-radius: 2%;
+    /* font-size: 30px; */
+    font-weight: bold;
+    background-size: cover;
+    aspect-ratio:1/1;
+}
+
+div.square:not(#n0) {
+    cursor: pointer;
+}
+
+div#AIPanel {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+#AIPanel>table th {
+    text-align: right;
+    padding-right: 10px;
+}
+
+#AIPanel>table {
+    width: 80%;
+    table-layout: fixed;
+    margin-top:15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#AIPanel>table td {
+    word-wrap: break-word;
+}
+
+#AIPanel>h3 {
+    text-align: center;
+}
+
+#AIbtn {
+    display: block;
+    text-align: center;
+}

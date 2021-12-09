@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sztuczna Inteligiencja</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+<body onload="puzzle.initPictures();puzzle.shuffle();">
+    <div class="picture">
+    <header>
+        <h1>Przesuwanka <i style="font-size:110%;" id="puzzleName">Ósemka</i></h1>
+        <button onclick="puzzle.shuffle();">Shuffle</button>
+        <input type="text" id="customState">
+        <button onclick="puzzle.setCustomState($('#customState').val());">Ustaw</button>
+        <span>Rozmiar: </span>
+        <select id="dim" onchange='puzzle.chBackDim(this.value);chFrontDim(this.value);puzzle.shuffle();puzzle.initPictures();'>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+    </header>
+    <article>  
+    <div class="board">
+        <div class="square" id="n0"></div>
+        <div class="square" id="n1"></div>
+        <div class="square" id="n2"></div>
+        <div class="square" id="n3"></div>
+        <div class="square" id="n4"></div>
+        <div class="square" id="n5"></div>
+        <div class="square" id="n6"></div>
+        <div class="square" id="n7"></div>
+        <div class="square" id="n8"></div>
+    </div>
+    <div class="overlay">
+        <div class="overtext">
+            <h1>Well Done! Puzzle solved in <span id="score">0</span> moves.</h1>
+            <h3>Play again?</h3>
+            <button id="button1" onclick="puzzle.shuffle();document.getElementsByClassName('overlay')[0].style.display = 'none';document.getElementsByClassName('overtext')[0].style.display = 'none';">Yes</button>
+            <button id="button2" onclick="alert('Good bye!!!');window.location.href='/';">No</button>
+        </div>
+    </div>
+
+    </article>
+
+
+    </div> <!-- .picture -->
+
+    <div id="AIPanel">
+        <h3>Panel sterowania AI</h3>
+        <div id="animation" style="text-align: center; display:none;"><img src="./img/Funnel.gif"></img>Szukam...</div>
+        <span id="AIbtn">
+            
+        <select id="algolist">
+            <option value="DFS">Brute Force: Depth First Search(not recommended)</option>
+            <option value="GREEDY" selected>Heuristic: Greedy (quick find)</option>
+            <option value="ASTAR">Heuristic: A* (optimised)</option>
+        </select>
+        <button id="solve">Rozwiąż</button>
+        <button onclick="
+        i = -1;
+         (function f(){
+           i = (i + 1) % puzzle.automoves.length;
+           puzzle.move(puzzle.automoves[ i ]);
+           const handle = setTimeout(f, 300);
+           if(i==(puzzle.automoves.length-1)) clearTimeout(handle);
+          })();  
+        ">Autoplay</button>
+        </span>
+        <table>
+            <tr>
+                <th>Rozwiązanie</th>
+                <td id="aip_solution"></td>
+            </tr>
+            <tr>
+                <th>
+                Liczba ruchów
+                </th>
+                <td id="aip_depth"></td>
+
+            </tr>
+            <tr>
+                <th>
+                Czas szukania
+                </th>
+                <td id="aip_time"></td>
+                
+            </tr>
+            <tr>
+                <th>
+                Strategia
+                </th>
+                <td id="aip_type"></td>
+            </tr>
+            <tr>
+                <th>
+                Unikatowych stanów 
+                </th>
+                <td id="aip_nodesVisited"></td>
+            </tr>
+            <tr>
+                <th>
+                Wygenerowanych węzłów
+                </th>
+                <td id="aip_nodesTotal"></td>
+            </tr>
+
+        </table>
+
+    </div>
+
+    <script src="puzzle-eight-plain.js">
+
+        
+    </script>
+    <script>
+
+function chFrontDim(n) {
+    $('.board').html('');
+    n2 = n**2;
+    for(i=0;i<n2;i++) {
+        $('.board').append('<div class="square" id="n'+i+'"></div>');
+    };
+    $('.board').css("grid-template-columns","repeat("+n+", 1fr)");
+    $('.board').css("grid-template-rows","repeat("+n+", 1fr)");
+    const names = {
+        "2" : "Trójka",
+        "3" : "Ósemka",
+        "4" : "Piętnastka",
+        "5" : "Dwudziesto-Czwórka",
+        "6" : "Trzydziesto-Piątka",
+        "7" : "Czterdziesto-Ósemka",
+        "8" : "Sześćdziesięcio-Trójka"
+    };
+    $('#puzzleName').html(names[n]);
+}
+    $(document).on('click', '#solve', function() {
+    let algo = $('#algolist').val();
+    $('#animation').show();
+        $.ajax({
+            url:"ai/getSolution.php",
+            method:"POST",
+            data:JSON.stringify({state : puzzle.state, type : algo}),
+            contentType: "application/json",
+            dataType: "json",
+            timeout: 0,
+            success:function(data) {
+                alert('Rozwiązanie zostało pobrane...');
+                $('#aip_solution').html(data.message.solution);
+                puzzle.automoves = data.message.solution;
+                $('#aip_time').html(data.message.time);
+                $('#aip_type').html(data.message.type);
+                $('#aip_depth').html(data.message.depth);
+                $('#aip_nodesTotal').html(data.message.nodesTotal);
+                $('#aip_nodesVisited').html(data.message.nodesVisited);
+                $('#animation').hide();
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
